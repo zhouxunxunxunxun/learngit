@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>lunbotu</title>
+	<style type="text/css">
+		
+		*{
+			margin: 0;
+			padding: 0;
+			text-decoration:none;
+		}
+		#demo{
+			width: 600px;
+			height: 300px;
+			border: 2px solid black;
+			position: absolute;
+			overflow: hidden;
+			left:50%;
+			top:50%;
+			margin-left: -300px;
+			margin-top: -150px;
+		}
+
+		.content{
+			width: 6000px;
+        	position: absolute;
+        	height:300px;
+			
+		}
+		.content1{
+			list-style: none;
+			float: left; 
+			/*margin-left: 20px;*/
+			width: 600px;
+			height:300px;
+			transition: all 2s;
+		}
+		img{
+			width: 600px;
+			height:300px;
+			float: left;
+		}
+		.btn div{
+			display: inline-block;
+			padding-top: 10px;
+			height:0;
+			width: 10px;
+			border-radius:50%;
+			float: left;
+ 			background:#fff;
+ 			margin-left: 10px;
+ 
+		}
+		.btn{
+			margin-left: 50px;
+			position: absolute;
+			top:90%;
+			left: 20%;
+		}
+		.btn .on{
+			background-color:#f40;
+		}
+
+		.arrow{
+			display: none;
+			cursor: pointer;
+			width: 60px;
+			height: 60px;
+			background-color: rgba(0,0,0,0.3);
+			line-height: 60px;
+			font-size: 40px;
+			font-weight: bold;
+			text-align: center;
+			color: #fff;
+			z-index: 2;
+			position: absolute;
+			top:180px;
+		}
+		.arrow:hover{
+			background-color: rgba(0,0,0,0.7);
+		}
+		#demo:hover .arrow{
+			display: block;
+		}
+		#prev{
+			left: 20px;
+		}
+		#next{
+			right:20px;
+		}
+	</style>
+</head>
+<body>
+	
+
+	<div id="demo">
+		<ul class="content" style="left: 0;">
+			<li class="content1">
+				<img src="5.jpg">
+			</li>
+			<li class="content1">
+				<img src="1.jpg">
+			</li>
+			<li class="content1">
+				<img src="2.jpg">
+			</li>
+			<li class="content1">
+				<img src="3.jpg">
+			</li>
+			<li class="content1">
+				<img src="4.jpg">
+			</li>
+			<li class="content1">
+				<img src="5.jpg">
+			</li>
+			<li class="content1">
+				<img src="1.jpg">
+			</li>
+		</ul>
+		<div class="btn">
+			<div index="1" class="on"></div>
+			<div index="2" ></div>
+			<div index="3" ></div>
+			<div index="4" ></div>
+			<div index="5" ></div>
+		</div>
+		<a id="prev" class="arrow"><</a>
+		<a id="next" class="arrow">></a>
+	</div>
+
+	<script type="text/javascript">
+		
+		function getStyle(elem,prop){
+			if(window.getComputedStyle){
+				return window.getComputedStyle(elem,null)[prop];
+			}else{
+				return elem.currentStyle[prop];
+			}
+		}
+		var prev = document.getElementById('prev');
+		var next = document.getElementById('next');
+		var ul_img = document.getElementsByTagName('ul')[0];
+		var li_img = document.getElementsByTagName('li');
+		var btns = document.getElementsByClassName('btn')[0].getElementsByTagName('div');
+		var demo = document.getElementById('demo');
+		var animated = false;
+		var timer;
+		var index = 1;
+		var len = 5;
+		 function showbtn() {
+		 	for(var i = 0;i < len;i++){
+		 		if(btns[i].className == 'on'){
+		 			btns[i].className = '';
+		 			break;
+		 		}
+		 		btns[i].className = '';
+		 	}
+		 	btns[index-1].className = 'on';
+		 }
+		  
+		  function animate(offset) {
+		  	var time = 300;
+		  	var interval = 10;
+		  	var speed = offset/(time/interval);
+		  	animated = true;
+		  	var newLeft = parseInt(ul_img.style.left) + offset;
+		  	function move(){
+		  		if(speed > 0 && parseInt(ul_img.style.left) < newLeft || speed < 0 && parseInt(ul_img.style.left) > newLeft){
+		  			ul_img.style.left = parseInt(ul_img.style.left) + speed +'px';
+		  		setTimeout(move,interval);
+		  		}else{
+		  			animated = false;
+		  			ul_img.style.left = newLeft + 'px';
+		  			if(newLeft > -600){
+		  				ul_img.style.left = -3000 + 'px';
+		  			}
+		  			if(newLeft < -3000){
+		  				ul_img.style.left = -600 + 'px';
+		  			}
+		  		}
+		  	}
+		  	move();
+		  }
+		  next.onclick = function() {
+		  	if(index == 5){
+		  		index = 1;
+		  	}else{
+		  		index += 1;
+		  	}
+		  	showbtn()
+		  	if(!animated){
+		  		animate(-600);
+		  	}
+		  }
+
+		  prev.onclick = function() {
+		  	if(index == 1){
+		  		index = 5;
+		  	}else{
+		  		index -= 1;
+		  	}
+		  	showbtn();
+		  	if(!animated){
+		  		animate(600);
+		  	}
+		  }
+		  for(var i = 0;i < len; i++){
+		  	btns[i].onclick = function() {
+		  		if(this.className == 'on'){
+		  			return
+		  		}
+		  		var myindex = parseInt(this.getAttribute('index'));
+		  		var offset = -600 * (myindex - index);
+		  		if(!animated){
+		  			animate(offset);
+		  		}
+		  		index = myindex;
+		  		showbtn();
+		  	}
+		  }
+		  
+		   //自动切换
+		   function autoplay() {
+		   		timer = setInterval(function() {
+		   			next.onclick();
+		   		},3000);
+		   }
+
+		   function stop() {
+				clearInterval(timer);
+		   }
+
+		   demo.onmouseover = stop;
+		   demo.onmouseout = autoplay;
+		   autoplay();
+
+		  // for(var i = 0;i < len;i++){
+		  // 	pic_btn.onclick = function() {
+		  // 		if()
+		  // 	}
+		  // }
+	</script>
+</body>
+</html>
