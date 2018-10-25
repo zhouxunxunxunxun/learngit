@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ajax</title>
+</head>
+<body>
+	
+	用户名:<input type="text" id="user"><br>
+	密码：<input type="password" id="pass"><br>
+	<input type="button" value="注册" id="reg">
+	<input type="button" value="登陆" id="login">
+	<script type="text/javascript">
+		var user = document.getElementById('user');
+		var padd = document.getElementById('pass');
+		var reg = document.getElementById('reg');
+		var login = document.getElementById('login');
+		reg.onclick = function(){
+			if(window.XMLHttpRequest){
+				xhr = new XMLHttpRequest();
+			}else{
+				xhr = ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xhr.onload = function(){
+				if(xhr.status == 200){
+					var json = JSON.parse(this.responseText);
+					console.log(json);
+					if(json.ok){
+						alert('注册成功');
+					}else{
+						alert('注册失败 '+json.msg);
+					}
+				}else{
+					alert('404');
+				}
+			}
+			xhr.open("GET","/user?act=reg&user="+user.value+"&pass="+pass.value,true);
+			xhr.send(null);
+		}
+		login.onclick = function (){
+			if(window.XMLHttpRequest){
+				xhr = new XMLHttpRequest();
+			}else{
+				xhr = ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xhr.onload = function(){
+				if(xhr.status == 200){
+					var json = JSON.parse(this.responseText);
+					console.log(json);
+					if(json.ok){
+						alert('登陆成功');
+					}else{
+						alert('登陆失败 '+json.msg);
+					}
+				}else{
+					alert('404');
+				}
+			}
+			xhr.open("GET","/user?act=login&user="+user.value+"&pass="+pass.value,true);
+			xhr.send(null);
+		}
+	</script>
+
+</body>
+</html>
